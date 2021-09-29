@@ -2,9 +2,8 @@ from abc import ABC
 from abc import ABC, abstractmethod
 
 class Animal(ABC):
-
     @abstractmethod
-    def make_sound():
+    def make_sound(self):
         pass
 
 class Dog(Animal):

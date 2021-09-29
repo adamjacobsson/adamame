@@ -7,6 +7,6 @@ pinject.add(Cat).as_singleton()
 pinject.add(Mouse).as_singleton()
 
 pinject.build()
+pinject.container.Dog.make_sound()
 
-pinject.container.Dog().make_sound()
 print('ee')

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from collections import namedtuple
 from typing import Callable
-from custom_types import ContainerDict
+from custom_types import AttrDict, Singleton, Transient
 
 
 class InstanceType(ABC):
@@ -9,7 +9,7 @@ class InstanceType(ABC):
     def provide(self):
         raise NotImplementedError
 
-
+"""
 class Singleton(InstanceType):
     def __init__(self, callable: Callable) -> None:
         self._callable = callable
@@ -25,7 +25,6 @@ class Transient(InstanceType):
     def provide(self):
         print('Transient provide')
 
-
 class ContainerObject:
     def __init__(self, callable: Callable) -> None:
         self.callable = callable
@@ -38,16 +37,29 @@ class ContainerObject:
     def as_transient(self):
         self.type = Transient(callable=self.callable)
         return self
-
+"""
 
 class Pinject:
     def __init__(self) -> None:
-        self.container = ContainerDict()
+        self.container = AttrDict()
+        self._callable = None
 
     def add(self, callable: Callable = None):
-        c_o = ContainerObject(callable=callable)
-        self.container[callable.__name__] = c_o
-        return c_o
-    
+        self._callable = callable
+        return self
+
     def build(self):
-        self.container.instances = self.container
+        pass
+        #self.container.instances = self.container
+
+    def as_singleton(self):
+        self.container[self._callable.__name__] = {
+            'callable': self._callable(),
+            'instance_type': 'singleton'
+        }
+
+    def as_transient(self):
+        self.container[self._callable.__name__] = {
+            'callable': self._callable,
+            'instance_type': 'transient'
+        }
